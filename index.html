@@ -1,145 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>GeoCoded | Map App</title>
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom fonts for this template -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this template -->
-    <link href="css/sb-admin.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <!-- Axios HTTP Client -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
-
-  <body class="fixed-nav sticky-footer bg-dark" id="page-top">
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-      <a class="navbar-brand" href="#">Bootstrap Map App</a>
-      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
-          <li class="nav-item active" data-toggle="tooltip" data-placement="right" title="Dashboard">
-            <a class="nav-link" href="#">
-              <i class="fa fa-fw fa-map-o"></i>
-              <span class="nav-link-text">Map</span>
-            </a>
-          </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-
-          <li class="nav-item">
-            <form class="form-inline my-2 my-lg-0 mr-lg-2">
-              <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search for...">
-                <span class="input-group-btn">
-                  <button class="btn btn-primary" type="button">
-                    <i class="fa fa-search"></i>
-                  </button>
-                </span>
-              </div>
-            </form>
-          </li>
-        </ul>
-      </div>
-    </nav>
+  <body>
     <div class="container">
-      <div id="formatted-address"></div>
-    </div>
-    <div class="content-wrapper">
+      <div class="options-box">
+        <h1>NeighborHood Map Udacity</h1>
+          <div>
+            <input id="show-listings" class="btn" type="button" value="Show Listings">
+            <input id="hide-listings" class="btn" type="button" value="Hide Listings">
+            <hr>
+            <span class="text"> Draw a shape to search within it for homes!</span>
+            <input id="toggle-drawing" class="btn"  type="button" value="Drawing Tools">
+          </div>
+          <hr>
+          <div>
+            <input id="zoom-to-area-text" type="text" placeholder="Enter your favorite area!">
+            <input id="zoom-to-area" class="btn" type="button" value="Zoom">
+          </div>
+          <hr>
+          <div>
+            <span class="text"> Within </span>
+            <select id="max-duration">
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="60">1 hour</option>
+            </select>
+            <select id="mode">
+              <option value="DRIVING">drive</option>
+              <option value="WALKING">walk</option>
+              <option value="BICYCLING">bike</option>
+              <option value="TRANSIT">transit ride</option>
+            </select>
+            <span class="text">of</span>
+            <input id="search-within-time-text" type="text" placeholder="Ex: Google Office NYC or 75 9th Ave, New York, NY">
+            <input id="search-within-time" class="btn" type="button" value="Go">
+          </div>
+          <hr>
+          <div>
+            <span class="text">Search for nearby places</span>
+            <input id="places-search" type="text" placeholder="Ex: Pizza delivery in NYC">
+            <input id="go-places" class="btn" type="button" value="Go">
+          </div>
+      </div>
       <div id="map"></div>
     </div>
-    <!-- /.content-wrapper -->
 
-    <footer class="sticky-footer">
-      <div class="container">
-        <div class="text-center">
-          <small>Copyright &copy; Your Website 2017</small>
-        </div>
-      </div>
-    </footer>
+    <script src="js/main.js"></script>
 
-    <!-- Scroll to Top Button -->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fa fa-angle-up"></i>
-    </a>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script>
-      function initMap() {
-        // Map Options
-        var options = {
-          zoom:14,
-          center:{lat:47.5729, lng:-117.6822}
-        }
-        // New Map
-        var map = new google.maps.Map(document.getElementById('map'), options);
-
-        // Listen for click on map
-        google.maps.event.addListener(map, 'click',
-          function(event){
-            // Add Marker
-            addMarker({coords:event.latLng});
-        });
-
-        // Array of markers
-        var markers = [
-          {
-            coords:{lat:47.5729,lng:-117.6822},
-            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
-            content:'<h1>Medical Lake</h1>'
-          },
-          {
-            coords:{lat:47.5762,lng:-117.6813}
-          },
-          {
-            coords:{lat:47.5720,lng:-117.6701}
-          }
-        ];
-
-        // Loop through markers
-        for(var i = 0;i < markers.length;i++){
-          addMarker(markers[i]);
-        }
-
-        // Add Marker Function
-        function addMarker(props){
-          var marker = new google.maps.Marker({
-           position:props.coords,
-           map:map,
-         });
-
-          // Check for custom Icon
-          if(props.iconImage){
-            // Set icon image
-            marker.setIcon(props.iconImage);
-          }
-
-          // Check Content
-          if(props.content){
-            var infoWindow = new google.maps.InfoWindow({
-              content:props.content
-            });
-
-            marker.addListener('click', function(){
-              infoWindow.open(map, marker);
-            });
-          }
-        }
-      }
-    </script>
-
-    <!-- GoogleMaps Script -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-O7FfNz7kHhBEZSOodptoBMtC9fhuLJM&callback=initMap">
+    <script async defer
+        src=
+        "https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyAHQzmpBHMJhdnWc-FzqdKeEQvxTAWOQuA&v=3&callback=initMap">
     </script>
   </body>
-
 </html>
